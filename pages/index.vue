@@ -43,17 +43,23 @@ async function take() {
 
   let list = Random.shuffle(names.value)
 
-  let rounds = Random.int(80, 100)
+  const max = Math.max(store.rollMaxCount, list.length)
+
+  let rounds = Random.int(Math.min(30, Math.floor(max / 1.8)), max)
 
   while (rounds > 0)
     for (const name of list) {
       await nextTick(() =>
           text.value = name
       )
-      if (!rounds--) break;
+      if (!rounds--) {
+        const ds = store.darkside?.trim()
+        if (!ds?.length) break;
+        text.value = names.value.find(name => name.includes(ds))
+        break;
+      }
 
-      console.log(Math.tanh((70 - rounds) / 60 + 0.05))
-      await sleep(Math.tanh((100 - rounds) / 120 + 0.05) * 70)
+      await sleep(Math.tanh((max - rounds) / (max * 1.2) + 0.05) * 70)
     }
 
   counter--
@@ -81,10 +87,15 @@ function addFromFilter() {
   }
 }
 
-function copySelected() {
+function copySelect(index: number) {
+  navigator.clipboard.writeText(names.value[index])
+  toast.add({ severity: "info", summary: "Copied", detail: "内容已复制" })
+}
+
+function copyFortune() {
   if (text.value.trim().length) {
-    toast.add({ severity: "info", summary: "Copied", detail: "内容已复制" })
     navigator.clipboard.writeText(text.value)
+    toast.add({ severity: "info", summary: "Copied", detail: "内容已复制" })
   }
 }
 </script>
@@ -92,10 +103,13 @@ function copySelected() {
 <template>
   <Card class="h-full" header="Random Fortune | for Onlyacat233">
     <template #content>
-      <Listbox ref="box" :options="names" class="mb-2" filter fluid optionLabel="name" scroll-height="20vh">
+      <Listbox ref="box" :options="names" class="mb-2" filter fluid optionLabel="name" scroll-height="20vh"
+               @select="copySelect">
         <template #option="{option, index}">
           <div class="w-full flex justify-between">
             <div class="flex-1 py-2">{{ option }}</div>
+            <Button class="" icon="pi pi-clipboard" outlined rounded severity="info"
+                    @click="copySelect(index)"/>
             <Button class="" icon="pi pi-trash" outlined rounded severity="danger"
                     @click="names.splice(index, 1)"/>
           </div>
@@ -140,7 +154,7 @@ function copySelected() {
           <divider>幸运嘉宾</divider>
           <InputText v-model="text" :class="[isDone ? 'sel' : '', 'fortune']" :placeholder="placeholder" class="flex-2"
                      readonly
-                     type="text" @click="copySelected()"/>
+                     type="text" @click="copyFortune()"/>
         </div>
       </div>
     </template>

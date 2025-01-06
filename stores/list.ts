@@ -3,7 +3,10 @@ import type {} from 'pinia-plugin-persistedstate'
 
 export const useNameListStore = defineStore('namelist', () => {
   const list = ref<string[]>([])
-  return { list }
+  const rollMaxCount = ref<number>(100)
+  const darkside = ref<string>()
+
+  return { list, rollMaxCount, darkside }
 }, {
   persist: true
 })
