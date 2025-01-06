@@ -9,6 +9,7 @@ import { useToast } from 'primevue/usetoast';
 const toast = useToast();
 
 let counter = 0
+const router = useRouter()
 const placeholders = ["猜猜这次摇到谁", "是谁这么幸运", "Ciallo (∠·ω )⌒★"]
 const placeholder = placeholders[Random.int(placeholders.length)]
 const box = ref<ListboxState>()
@@ -55,12 +56,20 @@ async function take() {
       if (!rounds--) {
         const ds = store.darkside?.trim()
         if (!ds?.length) break;
-        text.value = names.value.find(name => name.includes(ds))
+        const found = names.value.find(name => name.includes(ds))
+        if (found) text.value = found
         break;
       }
 
       await sleep(Math.tanh((max - rounds) / (max * 1.2) + 0.05) * 70)
     }
+
+
+  const ds = store.darkside?.trim()
+  if (ds?.length) {
+    const found = names.value.find(name => name.includes(ds))
+    if (found) text.value = found
+  }
 
   counter--
   if (!counter)
@@ -98,9 +107,20 @@ function copyFortune() {
     toast.add({ severity: "info", summary: "Copied", detail: "内容已复制" })
   }
 }
+
+const items = ref([
+  {
+    label: 'Config',
+    icon: 'pi pi-cog',
+    command: () => {
+      router.push("/config")
+    }
+  }
+])
 </script>
 
 <template>
+  <SpeedDial :model="items" direction="left" style="position: absolute; top: calc(50% - 2rem); right: 0" />
   <Card class="h-full" header="Random Fortune | for Onlyacat233">
     <template #content>
       <Listbox ref="box" :options="names" class="mb-2" filter fluid optionLabel="name" scroll-height="20vh"

@@ -1,9 +1,20 @@
 <script lang="ts" setup>
 
+const router = useRouter()
 const store = useNameListStore()
 const showDarkSide = ref(false)
 
 const items = ref([
+  {
+    label: 'Back',
+    icon: 'pi pi-arrow-left',
+    command: () => {
+      router.push('/')
+    }
+  }
+])
+
+const darkItems = ref([
   {
     label: 'DarkSide',
     icon: 'pi pi-cog',
@@ -15,6 +26,7 @@ const items = ref([
 </script>
 
 <template>
+  <SpeedDial :model="items" direction="left" style="position: absolute; top: calc(50% - 2rem); right: 0" />
   <Card header="Hello">
     <template #content>
       <div class="text-center flex flex-wrap gap-4">
@@ -33,7 +45,7 @@ const items = ref([
 
   <div class="pos-fixed h-full w-full">
     <div class="dark-dial">
-      <SpeedDial :model="items"/>
+      <SpeedDial :model="darkItems"/>
     </div>
   </div>
 </template>
