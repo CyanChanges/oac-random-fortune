@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Random from 'inaba'
-import { type FileUploadSelectEvent } from "primevue";
 import type { ListboxState } from 'primevue'
+import { type FileUploadSelectEvent } from "primevue";
 import { useNameListStore } from "~/stores/list";
 import debounce from 'lodash.debounce'
 import { useToast } from 'primevue/usetoast';
@@ -38,6 +38,14 @@ function sigmoid(x: number) {
   return 1 / (1 + Math.exp(-x));
 }
 
+function checkDark(list: string[], ds: string): string | undefined {
+  const dss = ds
+      .split('\n')
+      .map(x => x.trim())
+      .filter(Boolean)
+  return list.find(item => !!dss.find(dso => item.includes(dso)))
+}
+
 async function take() {
   counter++
   isDone.value = false
@@ -56,8 +64,8 @@ async function take() {
       if (!rounds--) {
         const ds = store.darkside?.trim()
         if (!ds?.length) break;
-        const found = names.value.find(name => name.includes(ds))
-        if (found) text.value = found
+        const dark = checkDark(names.value, ds)
+        if (dark) text.value = dark
         break;
       }
 
@@ -67,8 +75,8 @@ async function take() {
 
   const ds = store.darkside?.trim()
   if (ds?.length) {
-    const found = names.value.find(name => name.includes(ds))
-    if (found) text.value = found
+    const dark = checkDark(names.value, ds)
+    if (dark) text.value = dark
   }
 
   counter--

@@ -21,7 +21,16 @@ const darkItems = ref([
     command: () => {
       showDarkSide.value = !showDarkSide.value
     }
-  }
+  },
+  {
+    label: 'Clear Darkside',
+    icon: 'pi pi-times',
+    command: () => {
+      showDarkSide.value = false
+      store.darkside = ''
+    }
+  },
+
 ])
 </script>
 
