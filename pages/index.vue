@@ -2,7 +2,7 @@
 import Random from 'inaba'
 import { type FileUploadSelectEvent } from "primevue";
 import type { ListboxState } from 'primevue'
-import { useNameListStore } from "#imports";
+import { useNameListStore } from "~/stores/list";
 import debounce from 'lodash.debounce'
 import { useToast } from 'primevue/usetoast';
 
