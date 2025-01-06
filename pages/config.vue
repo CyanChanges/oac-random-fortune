@@ -16,7 +16,7 @@ const items = ref([
 
 const darkItems = ref([
   {
-    label: 'DarkSide',
+    label: 'Open DarkSide',
     icon: 'pi pi-cog',
     command: () => {
       showDarkSide.value = !showDarkSide.value
