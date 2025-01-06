@@ -4,6 +4,6 @@
   <NuxtPage/>
 </template>
 
-<script lang="ts">
+<script>
 import 'primeicons/primeicons.css'
 </script>

@@ -157,11 +157,11 @@ function copySelected() {
   }
 }
 
-.upload-container::v-deep .p-fileupload {
+.upload-container:deep(.p-fileupload) {
   height: 100%;
 }
 
-.p-fileupload::v-deep .p-fileupload-content {
+.p-fileupload:deep(.p-fileupload-content) {
   height: 100%;
 
   > * {
